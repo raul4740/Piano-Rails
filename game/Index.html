@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<!-- polyfill -->
+	<script src="../inc/shim/Base64.js" type="text/javascript"></script>
+	<script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+	<script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+	<script src="../inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
+	<!-- jasmid package -->
+	<script src="../inc/jasmid/stream.js"></script>
+	<script src="../inc/jasmid/midifile.js"></script>
+	<script src="../inc/jasmid/replayer.js"></script>
+	<!-- midi.js package -->
+	<script src="../js/midi/audioDetect.js" type="text/javascript"></script>
+	<script src="../js/midi/gm.js" type="text/javascript"></script>
+	<script src="../js/midi/loader.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+	<script src="../js/midi/player.js" type="text/javascript"></script>
+	<script src="../js/midi/synesthesia.js" type="text/javascript"></script>
+	<!-- utils -->
+	<script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
+	<script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+	<!-- includes -->
+	<script src="./inc/timer.js" type="text/javascript"></script>
+	<script src="./inc/colorspace.js" type="text/javascript"></script>
+	<script src="./inc/event.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/pianocanvas.css">
+</head>
+<body>
+
+<script type="text/javascript">
+
+window.onload = function () {
+	MIDI.loadPlugin({
+		soundfontUrl: "./soundfont/",
+		instrument: "acoustic_grand_piano",
+		onprogress: function(state, progress) {
+			console.log(state, progress);
+
+
+
+
+
+
+		},
+		onsuccess: function() {
+			var delay = 0; // play one note every quarter second
+			var note = 50; // the MIDI note
+			var velocity = 127; // how hard the note hits
+			// play the note
+			MIDI.setVolume(0, 127);
+			MIDI.Player.channel =0;
+			MIDI.Player.BPM= 0;
+			MIDI.Player.loadFile("bach_littlefugue 2.mid",MIDI.Player.start);
+			
+
+		}
+	});
+};
+
+function muteUnmute() {
+
+  if(MIDI.Player.playing){
+    MIDI.Player.pause();
+  } else {
+    MIDI.Player.resume();
+  }
+}
+
+
+
+
+
+</script>
+
+<canvas id="c1">
+</canvas>
+<canvas id="c2">
+</canvas>
+
+<h1 id="gameTitle">  Piano Rails</h1>
+
+    <div id="gameMenu">
+      <ul> 
+      <li>  <a href="Piano Music.html">Play</a> </li>
+      <li>  <a href="#" onclick="muteUnmute();">Mute</a> </li>
+      <li>  <a href="Credits.html">Credits</a> </li>
+       </ul>
+
+    </div>
+
+	
+	<script type="text/javascript">
+		
+var c1 = document.getElementById( 'c1' ),
+  ctx1 = c1.getContext( '2d' ),
+  c2 = document.getElementById( 'c2' ),
+  ctx2 = c2.getContext( '2d' ),
+  twopi = Math.PI * 2,
+  parts = [],
+  sizeBase,
+  cw,
+  opt,
+  hue,
+  count;
+
+function rand( min, max ) {
+  return Math.random() * ( max - min ) + min;
+}
+
+function hsla( h, s, l, a ) {
+  return 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')';
+}
+  
+function create() {
+  sizeBase = cw + ch;
+  count = Math.floor( sizeBase * 0.3 ),
+  hue = rand( 0, 360 ),
+  opt = {
+    radiusMin: 1,
+    radiusMax: sizeBase * 0.04,
+    blurMin: 10,
+    blurMax: sizeBase * 0.04,
+    hueMin: hue,
+    hueMax: hue + 100,
+    saturationMin: 10,
+    saturationMax: 70,
+    lightnessMin: 20,
+    lightnessMax: 50,
+    alphaMin: 0.1,
+    alphaMax: 0.5
+  }
+  ctx1.clearRect( 0, 0, cw, ch );
+  ctx1.globalCompositeOperation = 'lighter';
+  while( count-- ) {
+    var radius = rand( opt.radiusMin, opt.radiusMax ),
+      blur = rand( opt.blurMin, opt.blurMax ),
+      x = rand( 0, cw ),
+      y = rand( 0, ch ),
+      hue = rand(opt.hueMin, opt.hueMax ),
+      saturation = rand( opt.saturationMin, opt.saturationMax ),
+      lightness = rand(  opt.lightnessMin, opt.lightnessMax ),
+      alpha = rand( opt.alphaMin, opt.alphaMax );
+
+    ctx1.shadowColor = hsla( hue, saturation, lightness, alpha );
+    ctx1.shadowBlur = blur;
+    ctx1.beginPath();
+    ctx1.arc( x, y, radius, 0, twopi );
+    ctx1.closePath();
+    ctx1.fill();
+  }
+  
+  parts.length = 0;
+  for( var i = 0; i < Math.floor( ( cw + ch ) * 0.03 ); i++ ) {
+    parts.push({
+      radius: rand( 1, sizeBase * 0.03 ),
+      x: rand( 0, cw ),
+      y: rand( 0, ch ),
+      angle: rand( 0, twopi ),
+      vel: rand( 0.1, 0.5 ),
+      tick: rand( 0, 10000 )
+    });
+  }
+}
+
+function init() {
+  resize();
+  create();
+  loop();
+}
+
+function loop() {
+  requestAnimationFrame( loop );
+  
+  ctx2.clearRect( 0, 0, cw, ch );
+  ctx2.globalCompositeOperation = 'source-over';
+  ctx2.shadowBlur = 0;
+  ctx2.drawImage( c1, 0, 0 );
+  ctx2.globalCompositeOperation = 'lighter';
+  
+  var i = parts.length;
+  ctx2.shadowBlur = 15;
+  ctx2.shadowColor = '#fff';
+  while( i-- ) {
+    var part = parts[ i ];
+    
+    part.x += Math.cos( part.angle ) * part.vel;
+    part.y += Math.sin( part.angle ) * part.vel;
+    part.angle += rand( -0.05, 0.05 );
+    
+    ctx2.beginPath();
+    ctx2.arc( part.x, part.y, part.radius, 0, twopi );
+    ctx2.fillStyle = hsla( 0, 0, 100, 0.075 + Math.cos( part.tick * 0.02 ) * 0.05 );
+    ctx2.fill();
+    
+    if( part.x - part.radius > cw ) { part.x = -part.radius }
+    if( part.x + part.radius < 0 )  { part.x = cw + part.radius }
+    if( part.y - part.radius > ch ) { part.y = -part.radius }
+    if( part.y + part.radius < 0 )  { part.y = ch + part.radius }
+    
+    part.tick++;
+  }
+}
+
+function resize() {
+  cw = c1.width = c2.width = window.innerWidth,
+  ch = c1.height = c2.height = window.innerHeight;
+  create();
+}
+
+function click() {
+  create()
+}
+
+window.addEventListener( 'resize', resize );
+
+
+init();
+	</script>
+</body>
+</html>

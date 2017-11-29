@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<!-- polyfill -->
+	<script src="../inc/shim/Base64.js" type="text/javascript"></script>
+	<script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+	<script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+	<!-- midi.js package -->
+	<script src="../js/midi/audioDetect.js" type="text/javascript"></script>
+	<script src="../js/midi/gm.js" type="text/javascript"></script>
+	<script src="../js/midi/loader.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
+	<script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+	<!-- utils -->
+	<script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
+	<script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+	<script type="application/javascript" src="MidiPlayer.js"></script>
+	<script src="MidiParser.js"></script>
+	<script type="text/javascript" src="chords.js"></script>
+	<script type="text/javascript" src="sequencer.js"></script>
+	<script type="text/javascript" src="piano.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/pianocanvas.css">
+
+	
+
+
+
+</head>
+<body>
+
+<canvas id="c1"></canvas>
+<canvas id="c2"></canvas>
+
+
+		<div id="midsection">
+		<canvas id="c" width="844" height="230"></canvas>
+		</div>
+
+    
+
+
+
+    <div id="p-wrapper">
+	<ul id="piano">
+		<li><div class="anchor" id="C1" onclick="playNote(24)"></div></li>
+		<li><div class="anchor" id="D1" onclick="playNote(26)"></div> <span id="Db1" onclick="playNote(25)"></span></li>
+		<li><div class="anchor" id="E1" onclick="playNote(28)" ></div><span id="Eb1" onclick="playNote(27)"></span></li>
+		<li><div class="anchor" id="F1" onclick="playNote(29)"></div></li>
+		<li><div class="anchor" id="G1" onclick="playNote(31)"></div><span id="Gb1" onclick="playNote(30)"></span></li>
+		<li><div class="anchor" id="A1" onclick="playNote(33)"></div><span id="Ab1" onclick="playNote(22)"></span></li>
+		<li><div class="anchor" id="B1" onclick="playNote(35)"></div><span id="Bb1" onclick="playNote(34)"></span></li>
+
+		<li><div class="anchor" id="C2" onclick="playNote(36)"></div></li>
+		<li><div class="anchor" id="D2" onclick="playNote(38)"></div> <span id="Db2" onclick="playNote(37)"></span></li>
+		<li><div class="anchor" id="E2" onclick="playNote(39)" ></div><span id="Eb2" onclick="playNote(40)"></span></li>
+		<li><div class="anchor" id="F2" onclick="playNote(41)"></div></li>
+		<li><div class="anchor" id="G2" onclick="playNote(43)"></div><span id="Gb2" onclick="playNote(42)"></span></li>
+		<li><div class="anchor" id="A2" onclick="playNote(45)"></div><span id="Ab2" onclick="playNote(44)"></span></li>
+		<li><div class="anchor" id="B2" onclick="playNote(47)"></div><span id="Bb2" onclick="playNote(46)"></span></li>
+
+		<li><div class="anchor" id="C3" onclick="playNote(48)"></div></li>
+		<li><div class="anchor" id="D3" onclick="playNote(50)"></div> <span id="Db3" onclick="playNote(49)"></span></li>
+		<li><div class="anchor" id="E3" onclick="playNote(52)" ></div><span id="Eb3" onclick="playNote(51)"></span></li>
+		<li><div class="anchor" id="F3" onclick="playNote(53)"></div></li>
+		<li><div class="anchor" id="G3" onclick="playNote(55)"></div><span id="Gb3" onclick="playNote(54)"></span></li>
+		<li><div class="anchor" id="A3" onclick="playNote(57)"></div><span id="Ab3" onclick="playNote(56)"></span></li>
+		<li><div class="anchor" id="B3" onclick="playNote(59)"></div><span id="Bb3" onclick="playNote(58)"></span></li>
+
+		<li><div class="anchor" id="C4" onclick="playNote(60)"></div></li>
+		<li><div class="anchor" id="D4" onclick="playNote(62)"></div> <span id="Db4" onclick="playNote(61)"></span></li>
+		<li><div class="anchor" id="E4" onclick="playNote(64)" ></div><span id="Eb4" onclick="playNote(63)"></span></li>
+		<li><div class="anchor" id="F4" onclick="playNote(65)"></div></li>
+		<li><div class="anchor" id="G4" onclick="playNote(67)"></div><span id="Gb4" onclick="playNote(66)"></span></li>
+		<li><div class="anchor" id="A4" onclick="playNote(69)"></div><span id="Ab4" onclick="playNote(68)"></span></li>
+		<li><div class="anchor" id="B4" onclick="playNote(71)"></div><span id="Bb4" onclick="playNote(70)"></span></li>
+
+		<li><div class="anchor" id="C5" onclick="playNote(72)"></div></li>
+		<li><div class="anchor" id="D5" onclick="playNote(74)"></div> <span id="Db5" onclick="playNote(73)"></span></li>
+		<li><div class="anchor" id="E5" onclick="playNote(76)" ></div><span id="Eb5" onclick="playNote(75)"></span></li>
+		<li><div class="anchor" id="F5" onclick="playNote(77)"></div></li>
+		<li><div class="anchor" id="G5" onclick="playNote(79)"></div><span id="Gb5" onclick="playNote(78)"></span></li>
+		<li><div class="anchor" id="A5" onclick="playNote(81)"></div><span id="Ab5" onclick="playNote(80)"></span></li>
+		<li><div class="anchor" id="B5" onclick="playNote(83)"></div><span id="Bb5" onclick="playNote(82)"></span></li>
+
+		<li><div class="anchor" id="C6" onclick="playNote(84)"></div></li>
+		<li><div class="anchor" id="D6" onclick="playNote(86)"></div> <span id="Db6" onclick="playNote(85)"></span></li>
+		<li><div class="anchor" id="E6" onclick="playNote(88)" ></div><span id="Eb6" onclick="playNote(87)"></span></li>
+		<li><div class="anchor" id="F6" onclick="playNote(89)"></div></li>
+		<li><div class="anchor" id="G6" onclick="playNote(91)"></div><span id="Gb6" onclick="playNote(90)"></span></li>
+		<li><div class="anchor" id="A6" onclick="playNote(93)"></div><span id="Ab6" onclick="playNote(92)"></span></li>
+		<li><div class="anchor" id="B6" onclick="playNote(95)"></div><span id="Bb6" onclick="playNote(94)"></span></li>
+
+		<li><div class="anchor" id="C7" onclick="playNote(96)"></div></li>
+		<li><div class="anchor" id="D7" onclick="playNote(98)"></div> <span id="Db7" onclick="playNote(97)"></span></li>
+		<li><div class="anchor" id="E7" onclick="playNote(100)" ></div><span id="Eb7" onclick="playNote(99)"></span></li>
+		<li><div class="anchor" id="F7" onclick="playNote(101)"></div></li>
+		<li><div class="anchor" id="G7" onclick="playNote(103)"></div><span id="Gb7" onclick="playNote(102)"></span></li>
+		<li><div class="anchor" id="A7" onclick="playNote(105)"></div><span id="Ab7" onclick="playNote(104)"></span></li>
+		<li><div class="anchor" id="B7" onclick="playNote(107)"></div><span id="Bb7" onclick="playNote(106)"></span></li>
+
+
+
+	</ul>
+
+	    <label for="midiFileInput">Please choose a midi file</label>
+    <input type="file" id="midiFileInput" accept=".mid">
+</div>
+
+<div class="credit">
+	<strong>Piano Rails</strong><br />
+	A game by Raul4740 <strong style="color:#CE877B;"></strong><br />
+	<div class="credit_ribbon"></div>
+</div>
+
+    <h1 id="gameArrow">  </h1>
+
+<a href="Index.html"><h1 id="gameArrow"><<</h1> </a>
+
+
+
+<script type="text/javascript">
+
+var c1 = document.getElementById( 'c1' ),
+  ctx1 = c1.getContext( '2d' ),
+  c2 = document.getElementById( 'c2' ),
+  ctx2 = c2.getContext( '2d' ),
+  twopi = Math.PI * 2,
+  parts = [],
+  sizeBase,
+  cw,
+  opt,
+  hue,
+  count;
+
+function rand( min, max ) {
+  return Math.random() * ( max - min ) + min;
+}
+
+function hsla( h, s, l, a ) {
+  return 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')';
+}
+  
+function create() {
+  sizeBase = cw + ch;
+  count = Math.floor( sizeBase * 0.3 ),
+  hue = rand( 0, 360 ),
+  opt = {
+    radiusMin: 1,
+    radiusMax: sizeBase * 0.04,
+    blurMin: 10,
+    blurMax: sizeBase * 0.04,
+    hueMin: hue,
+    hueMax: hue + 100,
+    saturationMin: 10,
+    saturationMax: 70,
+    lightnessMin: 20,
+    lightnessMax: 50,
+    alphaMin: 0.1,
+    alphaMax: 0.5
+  }
+  ctx1.clearRect( 0, 0, cw, ch );
+  ctx1.globalCompositeOperation = 'lighter';
+  while( count-- ) {
+    var radius = rand( opt.radiusMin, opt.radiusMax ),
+      blur = rand( opt.blurMin, opt.blurMax ),
+      x = rand( 0, cw ),
+      y = rand( 0, ch ),
+      hue = rand(opt.hueMin, opt.hueMax ),
+      saturation = rand( opt.saturationMin, opt.saturationMax ),
+      lightness = rand(  opt.lightnessMin, opt.lightnessMax ),
+      alpha = rand( opt.alphaMin, opt.alphaMax );
+
+    ctx1.shadowColor = hsla( hue, saturation, lightness, alpha );
+    ctx1.shadowBlur = blur;
+    ctx1.beginPath();
+    ctx1.arc( x, y, radius, 0, twopi );
+    ctx1.closePath();
+    ctx1.fill();
+  }
+  
+  parts.length = 0;
+  for( var i = 0; i < Math.floor( ( cw + ch ) * 0.03 ); i++ ) {
+    parts.push({
+      radius: rand( 1, sizeBase * 0.03 ),
+      x: rand( 0, cw ),
+      y: rand( 0, ch ),
+      angle: rand( 0, twopi ),
+      vel: rand( 0.1, 0.5 ),
+      tick: rand( 0, 10000 )
+    });
+  }
+}
+
+function init() {
+  resize();
+  create();
+  loop();
+}
+
+function loop() {
+  requestAnimationFrame( loop );
+  
+  ctx2.clearRect( 0, 0, cw, ch );
+  ctx2.globalCompositeOperation = 'source-over';
+  ctx2.shadowBlur = 0;
+  ctx2.drawImage( c1, 0, 0 );
+  ctx2.globalCompositeOperation = 'lighter';
+  
+  var i = parts.length;
+  ctx2.shadowBlur = 15;
+  ctx2.shadowColor = '#fff';
+  while( i-- ) {
+    var part = parts[ i ];
+    
+    part.x += Math.cos( part.angle ) * part.vel;
+    part.y += Math.sin( part.angle ) * part.vel;
+    part.angle += rand( -0.05, 0.05 );
+    
+    ctx2.beginPath();
+    ctx2.arc( part.x, part.y, part.radius, 0, twopi );
+    ctx2.fillStyle = hsla( 0, 0, 100, 0.075 + Math.cos( part.tick * 0.02 ) * 0.05 );
+    ctx2.fill();
+    
+    if( part.x - part.radius > cw ) { part.x = -part.radius }
+    if( part.x + part.radius < 0 )  { part.x = cw + part.radius }
+    if( part.y - part.radius > ch ) { part.y = -part.radius }
+    if( part.y + part.radius < 0 )  { part.y = ch + part.radius }
+    
+    part.tick++;
+  }
+}
+
+function resize() {
+  cw = c1.width = c2.width = window.innerWidth,
+  ch = c1.height = c2.height = window.innerHeight;
+  create();
+}
+
+function click() {
+  create()
+}
+
+window.addEventListener( 'resize', resize );
+
+
+init();
+
+var parser = new MidiParser();
+const fileReader = new FileReader();
+var counter = 0;
+var midiFileInput = document.getElementById('midiFileInput');
+var parsedMidi;
+
+const onLoadFile = (loadEvent) => {};
+const file = fileReader.result;
+const onMidiFileChange = (inputEvent) => {
+	fileReader.readAsArrayBuffer(inputEvent.target.files[0]); }
+
+function highlight(obj){
+   var orig = obj.style.background;
+
+   if(obj.id.length === 2) {
+   	obj.style.background = 'linear-gradient(-30deg,#f5f5f5,#ff5364';
+   	setTimeout(function(){
+       	 obj.style.background = 'linear-gradient(-30deg,#f5f5f5,#fff)';
+   	}, 100);
+   } else {
+
+   		obj.style.background = 'linear-gradient(-30deg,#f5f5f5,#ff5364';
+   	setTimeout(function(){
+       	 obj.style.background ='linear-gradient(-20deg,#333,#000,#333)';
+   	}, 100);
+
+   }
+}
+
+function playNote(nota){
+	MIDI.noteOn(0, nota, 127, 0);
+    MIDI.noteOff(0, nota, 127, 2.75);
+
+}
+
+
+midiFileInput.addEventListener('change', onMidiFileChange);
+
+
+
+window.onload = function () {
+    MIDI.loadPlugin({
+        soundfontUrl: "./soundfont/",
+        instrument: "acoustic_grand_piano",
+        onprogress: function(state, progress) {
+            console.log(state, progress);
+        }
+    });
+
+};
+
+
+fileReader.onload = function (file) {
+  for (var i = 0; i <= 1; i++) {
+    var uint8Midi = new Uint8Array(file.target.result);
+    parsedMidi = parser.parseUint8(uint8Midi);
+    console.log("loaded once");
+    console.log(parsedMidi.note)
+
+            document.addEventListener("keypress", function(event) {
+    if (event.keyCode != 1) {
+
+        MIDI.setVolume(0, 127);
+        console.log(parsedMidi[counter].note, counter, parsedMidi[counter].type, parsedMidi);
+        counter = counter +1;
+        highlightCounter = counter -1;
+
+                var currentNote = document.getElementById(MIDI.noteToKey[parsedMidi[counter+1].note])
+        highlight(currentNote);
+        console.log(currentNote.id.length);
+
+        var velocity = 127; // how hard the note hits
+        MIDI.setVolume(0, 127);
+        MIDI.noteOn(0, parsedMidi[counter].note, parsedMidi[counter].velocity, parsedMidi[counter].delay);
+        MIDI.noteOff(0, parsedMidi[counter].note, parsedMidi[counter].velocity, parsedMidi[counter].delay + 2.75);
+
+
+
+  
+        
+
+
+
+    }
+}) 
+        
+
+  }
+
+        
+        
+        // Use parsed midi
+
+
+
+        return parsedMidi
+}
+
+
+
+
+</script>
+
+	<script type="text/javascript">
+		
+
+	</script>
+
+
+
+
+
+</body>
+</html>
